@@ -15,6 +15,7 @@ const chainIds = {
   mainnet: 1,
   rinkeby: 4,
   goerli: 5,
+  arbGoerli: 421613,
 };
 
 // Ensure that we have all the environment variables we need.
@@ -36,6 +37,9 @@ function createTestnetConfig(network: keyof typeof chainIds): NetworkUserConfig 
       break;
     case "goerli":
       nodeUrl = `https://goerli.infura.io/v3/${infuraKey}`;
+      break;
+    case "arbGoerli":
+      nodeUrl = `https://arb-goerli.g.alchemy.com/v2/${infuraKey}`;
       break;
   }
 
@@ -82,7 +86,18 @@ const config: HardhatUserConfig = {
       mainnet: process.env.ETHERSCAN_KEY || '',
       rinkeby: process.env.ETHERSCAN_KEY || '',
       goerli: process.env.ETHERSCAN_KEY || '',
+      arbGoerli: process.env.ETHERSCAN_KEY || '',
     },
+    customChains: [
+      {
+        network: "arbGoerli",
+        chainId: 421613,
+        urls: {
+          apiURL: "https://api-goerli.arbiscan.io/api",
+          browserURL: "https://goerli.arbiscan.io/"
+        }
+      }
+    ]
   },
   gasReporter: {
     coinmarketcap: process.env.COINMARKETCAP_KEY,
@@ -96,6 +111,7 @@ if (privateKey) {
     mainnet: createTestnetConfig("mainnet"),
     goerli: createTestnetConfig("goerli"),
     rinkeby: createTestnetConfig("rinkeby"),
+    arbGoerli: createTestnetConfig("arbGoerli"),
   };
 }
 
